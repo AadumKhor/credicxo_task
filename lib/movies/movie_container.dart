@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:credicxo_task/bloc/bloc.dart';
 import 'package:credicxo_task/movies/listPage.dart';
 import 'package:credicxo_task/movies/movies.dart';
@@ -14,6 +17,9 @@ class MovieContainer extends StatefulWidget {
 class _MovieContainerState extends State<MovieContainer> {
   MoviesBloc _bloc;
   PageController _pageController;
+  final Connectivity _connectivity = new Connectivity();
+  var status = ConnectivityResult.none;
+  StreamSubscription<ConnectivityResult> _streamSubscription;
 
   @override
   void initState() {
@@ -21,6 +27,9 @@ class _MovieContainerState extends State<MovieContainer> {
     _bloc = BlocProvider.of(context);
     _bloc.add(FetchMovieList());
     _pageController = new PageController();
+    initConnectivity();
+    _streamSubscription =
+        _connectivity.onConnectivityChanged.listen(updateStatus);
   }
 
   @override
@@ -28,6 +37,38 @@ class _MovieContainerState extends State<MovieContainer> {
     super.dispose();
     _bloc?.close();
     _pageController.dispose();
+    _streamSubscription.cancel();
+  }
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } catch (e) {
+      print(e.toString());
+    }
+    updateStatus(result);
+  }
+
+  Future<void> updateStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        setState(() {
+          status = ConnectivityResult.wifi;
+        });
+        break;
+      case ConnectivityResult.mobile:
+        setState(() {
+          status = ConnectivityResult.mobile;
+        });
+        break;
+      case ConnectivityResult.none:
+        setState(() => status = ConnectivityResult.none);
+        break;
+      default:
+        setState(() => status = ConnectivityResult.none);
+        break;
+    }
   }
 
   _onPageChanged(PageDirection direction) {
@@ -51,7 +92,7 @@ class _MovieContainerState extends State<MovieContainer> {
           if (state is MoviesError) {
             Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text(
-                  'Some error has occued',
+                  'Network Error',
                   style: TextStyle(color: Colors.white),
                 ),
                 backgroundColor: Colors.black));
@@ -65,10 +106,10 @@ class _MovieContainerState extends State<MovieContainer> {
                   child: CircularProgressIndicator(),
                 );
               }
-              if (state is MoviesError) {
+              if (state is MoviesError || status == ConnectivityResult.none) {
                 return Center(
                   child: Text(
-                    'Some Error occured.',
+                    'Something went wrong.',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
