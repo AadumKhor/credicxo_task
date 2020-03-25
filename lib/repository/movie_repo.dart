@@ -21,7 +21,9 @@ class MovieRepo {
   Future<String> getMovieDetails(String movieId) async {
     final String url = api2.replaceAll('MOVIEID', movieId);
     var response = await http.get(url);
-    final result = jsonDecode(response.body);
-    return result[''];
+    final dataJson = jsonDecode(response.body);
+    var list = dataJson['results'];
+    print('Details are ${list[0]['name']}');
+    return list[0]['name'];
   }
 }

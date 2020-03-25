@@ -17,18 +17,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('Popular Movie List'),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.blue,
+      //   title: Text('Popular Movie List'),
+      // ),
+      body: BlocProvider(
+        create: (context) {
+          return MoviesBloc(movieRepo: widget.repo);
+        },
+        child: MovieContainer(),
       ),
-      body: SafeArea(
-          minimum: EdgeInsets.all(5.0),
-          child: BlocProvider(
-            create: (context) {
-              return MoviesBloc(movieRepo: widget.repo);
-            },
-            child: MovieContainer(),
-          )),
     );
   }
 }

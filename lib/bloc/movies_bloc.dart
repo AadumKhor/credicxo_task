@@ -23,32 +23,32 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     MoviesEvent event,
   ) async* {
     if (event is FetchMovieList) {
-      if (this.state is MoviesInitial) {
-        try {
-          print('Loading is true');
-          yield MoviesLoaded(isLoading: true, movies: []);
-          print('Fetching movies...');
-          var movies = await movieRepo.getMovies();
-          print('Fetched movies');
-          MoviesLoaded state = this.state as MoviesLoaded;
-          print('Mutating state');
-          yield state.copyWith(isLoading: false, movies: movies);
-          print('All done');
-          // }
-        } catch (e) {
-          print(e.toString());
-          yield MoviesError();
-        }
+      // if (this.state is MoviesInitial) {
+      try {
+        print('Loading is true');
+        yield MoviesLoaded(isLoading: true, movies: [], details: '');
+        print('Fetching movies...');
+        var movies = await movieRepo.getMovies();
+        print('Fetched movies');
+        MoviesLoaded state = this.state as MoviesLoaded;
+        print('Mutating state');
+        yield state.copyWith(isLoading: false, movies: movies);
+        print('All done');
+        // }
+      } catch (e) {
+        print(e.toString());
+        yield MoviesError();
       }
+      // }
     }
     if (event is FetchMovieDetails) {
       // if (state is MoviesLoaded) {
       try {
         print('Ready to get details');
-        yield MovieDetailsLoaded(isLoading: true);
+        yield MoviesLoaded(isLoading: true, movies: [], details: '');
         String details = await movieRepo.getMovieDetails(event.movieId);
         print('Details fetched');
-        MovieDetailsLoaded state = this.state as MovieDetailsLoaded;
+        MoviesLoaded state = this.state as MoviesLoaded;
         print('Mutating state');
         yield state.copyWith(isLoading: false, details: details);
         print('All done');

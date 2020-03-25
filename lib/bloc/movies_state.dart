@@ -12,12 +12,16 @@ class MoviesInitial extends MoviesState {
 class MoviesLoaded extends MoviesState {
   final List<MovieListItem> movies;
   final bool isLoading;
+  final String details;
 
-  MoviesLoaded({this.movies, this.isLoading});
+  MoviesLoaded({this.movies, this.isLoading, this.details});
 
-  MoviesLoaded copyWith({List<MovieListItem> movies, bool isLoading}) {
+  MoviesLoaded copyWith(
+      {List<MovieListItem> movies, bool isLoading, String details}) {
     return MoviesLoaded(
-        movies: movies ?? this.movies, isLoading: isLoading ?? this.isLoading);
+        details: details ?? this.details,
+        movies: movies ?? this.movies,
+        isLoading: isLoading ?? this.isLoading);
   }
 
   @override
