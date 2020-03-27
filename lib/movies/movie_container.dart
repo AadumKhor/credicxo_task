@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:credicxo_task/bloc/bloc.dart';
 import 'package:credicxo_task/movies/listPage.dart';
 import 'package:credicxo_task/movies/movies.dart';
+import 'package:credicxo_task/movies/searchPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,6 +80,9 @@ class _MovieContainerState extends State<MovieContainer> {
       case (PageDirection.next):
         return _pageController.jumpToPage(1);
         break;
+      case (PageDirection.search):
+        return _pageController.jumpToPage(2);
+        break;
       default:
         return _pageController.jumpToPage(0);
     }
@@ -117,23 +121,28 @@ class _MovieContainerState extends State<MovieContainer> {
                   ),
                 );
               }
-              return PageView(
-                controller: _pageController,
-                children: <Widget>[
-                  ListPage(
-                    state: state,
-                    bloc: _bloc,
-                    onPagechanged: _onPageChanged,
-                  ),
-                  DetailsPage(
-                    state: state,
-                    bloc: _bloc,
-                    onPageChanged: _onPageChanged,
-                  )
-                ],
+
+              if (state is Search) {
+                return SearchPage(
+                  bloc: _bloc,
+                  state: state,
+                  // onPageChanged: _onPageChanged,
+                );
+              }
+
+              if (state is MovieDetailsLoaded) {
+                return DetailsPage(
+                  state: state,
+                  bloc: _bloc,
+                );
+              }
+
+              return ListPage(
+                bloc: _bloc,
+                state: state as MoviesLoaded,
               );
             }));
   }
 }
 
-enum PageDirection { next, back }
+enum PageDirection { next, back, search }

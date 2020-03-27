@@ -23,7 +23,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     MoviesEvent event,
   ) async* {
     if (event is FetchMovieList) {
-      // if (this.state is MoviesInitial) {
       try {
         print('Loading is true');
         yield MoviesLoaded(isLoading: true, movies: [], details: '');
@@ -34,21 +33,18 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         print('Mutating state');
         yield state.copyWith(isLoading: false, movies: movies);
         print('All done');
-        // }
       } catch (e) {
         print(e.toString());
         yield MoviesError();
       }
-      // }
     }
     if (event is FetchMovieDetails) {
-      // if (state is MoviesLoaded) {
       try {
         print('Ready to get details');
-        yield MoviesLoaded(isLoading: true, movies: [], details: '');
-        String details = await movieRepo.getMovieDetails(event.movieId);
+        yield MovieDetailsLoaded(isLoading: true, details: MovieDetails());
+        MovieDetails details = await movieRepo.getMovieDetails(event.movieId);
         print('Details fetched');
-        MoviesLoaded state = this.state as MoviesLoaded;
+        MovieDetailsLoaded state = this.state as MovieDetailsLoaded;
         print('Mutating state');
         yield state.copyWith(isLoading: false, details: details);
         print('All done');
@@ -56,7 +52,25 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         print(e.toString());
         yield MoviesError();
       }
-      // }
+    }
+
+    if (event is SearchButtonClicked) {
+      yield Search(isSearching: true, searchResults: []);
+    }
+
+    if (event is SearchForMovie) {
+      try {
+        print('Search init');        
+        var list = await movieRepo.search(event.name);
+        print('Search successful');
+        Search state = this.state as Search;
+        yield state.copyWith(isSearching: false, searchResults: list);
+        print(state.isSearching.toString() + list.length.toString());
+        print('All done');
+      } catch (e) {
+        print(e.toString());
+        yield MoviesError();
+      }
     }
   }
 }

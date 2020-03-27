@@ -7,9 +7,8 @@ import 'movie_container.dart';
 class ListPage extends StatefulWidget {
   final MoviesLoaded state;
   final MoviesBloc bloc;
-  final ValueChanged<PageDirection> onPagechanged;
 
-  ListPage({@required this.state, @required this.bloc, this.onPagechanged})
+  ListPage({@required this.state, @required this.bloc})
       : assert(state != null, bloc != null);
   @override
   _ListPageState createState() => _ListPageState();
@@ -28,8 +27,19 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('Popular Movies'),
+        backgroundColor: Color(0xff8142f5),
+        elevation: 4.0,
+        title: Text(
+          'Popular Movies',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                _bloc.add(SearchButtonClicked());
+              })
+        ],
       ),
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 4.0),
@@ -47,7 +57,6 @@ class _ListPageState extends State<ListPage> {
                 child: GestureDetector(
                   onTap: () {
                     _bloc.add(FetchMovieDetails(movieId: movie.movieId));
-                    widget.onPagechanged(PageDirection.next);
                   },
                   child: Container(
                     width: double.maxFinite,
@@ -60,12 +69,16 @@ class _ListPageState extends State<ListPage> {
                       children: <Widget>[
                         Expanded(
                             flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  image: DecorationImage(
-                                      image: NetworkImage(imageUrl +
-                                          movie.imgPath.replaceAll("\\", "")))),
+                            child: Hero(
+                              tag: 'photo',
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    image: DecorationImage(
+                                        image: NetworkImage(imageUrl +
+                                            movie.imgPath
+                                                .replaceAll("\\", "")))),
+                              ),
                             )),
                         SizedBox(
                           width: 20.0,

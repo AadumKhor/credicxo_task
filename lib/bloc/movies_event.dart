@@ -23,3 +23,21 @@ class FetchMovieDetails extends MoviesEvent {
   @override
   List<Object> get props => null;
 }
+
+class SearchButtonClicked extends MoviesEvent{
+  @override
+  List<Object> get props => null;
+
+}
+
+class SearchForMovie extends MoviesEvent {
+  final String name;
+
+  SearchForMovie({this.name});
+
+  @override
+  List<Object> get props => [name];
+
+  @override
+  String toString() => 'Search for movie: $name';
+}

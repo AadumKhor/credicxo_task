@@ -33,11 +33,11 @@ class MoviesLoaded extends MoviesState {
 
 class MovieDetailsLoaded extends MoviesState {
   final bool isLoading;
-  final String details;
+  final MovieDetails details;
 
   MovieDetailsLoaded({this.details, this.isLoading});
 
-  MovieDetailsLoaded copyWith({bool isLoading, String details}) {
+  MovieDetailsLoaded copyWith({bool isLoading, MovieDetails details}) {
     return MovieDetailsLoaded(
         isLoading: isLoading ?? this.isLoading,
         details: details ?? this.details);
@@ -48,7 +48,29 @@ class MovieDetailsLoaded extends MoviesState {
 
   @override
   String toString() =>
-      'Movie details loading : $isLoading and details : $details';
+      'Movie details loading : $isLoading and details : ${details.toString()}';
+}
+
+// class SearchInit
+
+class Search extends MoviesState {
+  final bool isSearching;
+  final List<MovieListItem> searchResults;
+
+  Search({this.searchResults, this.isSearching});
+
+  Search copyWith({List<MovieListItem> searchResults, bool isSearching}) {
+    return Search(
+        isSearching: isSearching ?? this.isSearching,
+        searchResults: searchResults ?? this.searchResults);
+  }
+
+  @override
+  String toString() =>
+      'Search results : ${searchResults?.length},is searching = $isSearching';
+
+  @override
+  List<Object> get props => [isSearching, searchResults];
 }
 
 class MoviesError extends MoviesState {
