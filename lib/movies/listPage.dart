@@ -27,7 +27,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        backgroundColor: Color(0xff8142f5),
+        backgroundColor: Color(0xff1515ad),
         elevation: 4.0,
         title: Text(
           'Popular Movies',
@@ -58,51 +58,69 @@ class _ListPageState extends State<ListPage> {
                   onTap: () {
                     _bloc.add(FetchMovieDetails(movieId: movie.movieId));
                   },
-                  child: Container(
-                    width: double.maxFinite,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 0.5, color: Colors.green)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                            flex: 1,
-                            child: Hero(
-                              tag: 'photo',
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    elevation: 4.0,
+                    child: Container(
+                      margin: EdgeInsets.all(2.0),
+                      width: double.maxFinite,
+                      height: 200.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                              flex: 1,
+                              child: Hero(
+                                tag: 'photo',
+                                child: Container(
+                                  height: 200.0,
+                                  width: 200.0,
+                                  decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(imageUrl +
+                                              movie.imgPath
+                                                  .replaceAll("\\", "")))),
+                                ),
+                              )),
+                          SizedBox(
+                            width: 20.0,
+                          ),
+                          Expanded(
+                              flex: 2,
                               child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    image: DecorationImage(
-                                        image: NetworkImage(imageUrl +
-                                            movie.imgPath
-                                                .replaceAll("\\", "")))),
-                              ),
-                            )),
-                        SizedBox(
-                          width: 20.0,
-                        ),
-                        Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: RichText(
-                                  text: TextSpan(children: [
-                                TextSpan(
-                                    text: '${movie.name}\n',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                    text: movie.name,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.normal))
-                              ])),
-                            ))
-                      ],
+                                child: RichText(
+                                    softWrap: true,
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                          text: '${movie.name}\n\n',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              letterSpacing: 1.2,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: '⭐ ${movie.rating.toString()}\n',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w500)),
+                                      TextSpan(
+                                          text: movie.language.toUpperCase(),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold)),
+                                    ])),
+                              ))
+                        ],
+                      ),
                     ),
                   ),
                 ),

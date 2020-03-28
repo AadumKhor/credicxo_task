@@ -17,8 +17,13 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  final _headingStyle = new TextStyle();
-  final _detailsStyle = new TextStyle();
+  final _headingStyle = new TextStyle(
+      color: Colors.grey[600],
+      letterSpacing: 1.1,
+      fontSize: 20.0,
+      fontWeight: FontWeight.w300);
+  final _detailsStyle = new TextStyle(
+      color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.normal);
 
   // final _cion = IconButton(
   //     onPressed: () {
@@ -90,9 +95,9 @@ class _DetailsPageState extends State<DetailsPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _titleAndDetails(
-                      'Release Date', widget.state.details.releaseDate),
-                  _titleAndDetails('Language', widget.state.details.language),
+                  _titleAndDetails('Release Date', details.releaseDate),
+                  _titleAndDetails('Language', details.language.toUpperCase()),
+                  _titleAndDetails('Overview', details.overview)
                 ],
               ),
             ),
@@ -100,17 +105,16 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _titleAndDetails(String title, String details) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: RichText(
-        text: TextSpan(children: [
-          TextSpan(
-            text: '$title\n',
-          ),
-          TextSpan(
-            text: details,
-          )
-        ]),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+        child: RichText(
+          text: TextSpan(children: [
+            TextSpan(text: '$title\n\n', style: _headingStyle),
+            TextSpan(text: details, style: _detailsStyle)
+          ]),
+        ),
       ),
     );
   }

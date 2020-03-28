@@ -13,6 +13,8 @@ class MovieRepo {
       return new MovieListItem(
           name: item['title'],
           imgPath: item['poster_path'],
+          rating: item['vote_average'].toString(),
+          language: item['original_language'],
           movieId: item['id'].toString());
     }).toList();
     return result;
@@ -45,6 +47,8 @@ class MovieRepo {
     final List<MovieListItem> results = list.map((item) {
       return MovieListItem(
           name: item['title'],
+          rating: item['vote_average'].toString(),
+          language: item['original_language'],
           movieId: item['id'].toString(),
           imgPath: item['poster_path'] ?? '');
     }).toList();
